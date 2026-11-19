@@ -66,7 +66,7 @@ def read_mat(n): ###########################
             re = " 다시 "
     return mat
 
-def save_check(matrix):
+def print_mat(matrix):
     for row in matrix:
         for num in row:
             print(num, end=" ")
@@ -108,12 +108,12 @@ def mode1():
     print("필터 A (3줄 입력, 공백 구분)")
     filt_a = read_mat(3)
     print("\n입력된 필터 A:")
-    save_check(filt_a)
+    print_mat(filt_a)
 
     print("\n필터 B (3줄 입력, 공백 구분)")
     filt_b = read_mat(3)
     print("\n입력된 필터 B:")
-    save_check(filt_b)
+    print_mat(filt_b)
 
     print("\n#----------------------------------------")
     print("# [2] 패턴 입력")
@@ -122,7 +122,7 @@ def mode1():
     print("패턴 (3줄 입력, 공백 구분)")
     pattern = read_mat(3)
     print("\n입력된 패턴:")
-    save_check(pattern)
+    print_mat(pattern)
 
     print("\n#----------------------------------------")
     print("# [3] MAC 결과")
