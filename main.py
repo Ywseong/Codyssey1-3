@@ -10,10 +10,10 @@ def mac(pattern, filt):
             add += mul
     return add
 
-def judge(filt_a, filt_b):
-    if abs(filt_a-filt_b) < EPSILON:
+def judge(score_a, score_b):
+    if abs(score_a-score_b) < EPSILON:
         return "UNDECIDED"
-    elif filt_a > filt_b:
+    elif score_a > score_b:
         return "A"
     else: 
         return "B"
@@ -64,8 +64,14 @@ def read_mat(n): ###########################
         except ValueError:
             print("\n실수를 입력하시오")
             re = " 다시 "
-        
     return mat
+
+def save_check(matrix):
+    for row in matrix:
+        for num in row:
+            print(num, end=" ")
+        print()
+
 def measure_mac(pattern, filt, repeat=10):
     result = mac(pattern, filt)
     whole_time = 0
@@ -100,9 +106,14 @@ def mode1():
 
 
     print("필터 A (3줄 입력, 공백 구분)")
-    Filt_a = read_mat(3)
+    filt_a = read_mat(3)
+    print("\n입력된 필터 A:")
+    save_check(filt_a)
+
     print("\n필터 B (3줄 입력, 공백 구분)")
-    Filt_b = read_mat(3)
+    filt_b = read_mat(3)
+    print("\n입력된 필터 B:")
+    save_check(filt_b)
 
     print("\n#----------------------------------------")
     print("# [2] 패턴 입력")
@@ -110,13 +121,15 @@ def mode1():
 
     print("패턴 (3줄 입력, 공백 구분)")
     pattern = read_mat(3)
+    print("\n입력된 패턴:")
+    save_check(pattern)
 
     print("\n#----------------------------------------")
     print("# [3] MAC 결과")
     print("#----------------------------------------")
 
-    mac_a, time_a = measure_mac(pattern, Filt_a)
-    mac_b, time_b = measure_mac(pattern, Filt_b)
+    mac_a, time_a = measure_mac(pattern, filt_a)
+    mac_b, time_b = measure_mac(pattern, filt_b)
     time_avg = (time_a + time_b) / 2
 
     print(f"A 점수: {mac_a}")
@@ -127,13 +140,15 @@ def mode1():
 
     if result == "UNDECIDED":
         print(f"판정: 판정 불가 (|A-B| < {EPSILON})")
-
-    print(f"판정: {result}")
+    else:
+        print(f"판정: {result}")
 
 def main():
     mode = sel_mode()
     if mode == 1:
         mode1()
+    elif mode == 2:
+        print("data.json 분석 모드는 아직 구현되지 않았습니다.")
 if __name__ == "__main__":
     main()
 
