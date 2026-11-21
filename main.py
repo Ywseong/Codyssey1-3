@@ -1,15 +1,10 @@
 
 from npu_sim.npu import mac, judge, measure_mac, EPSILON
 from npu_sim.io_utils import read_mat, print_mat, load_json
-from npu_sim.data_loader import normalize_label, get_size
+from npu_sim.data_loader import normalize_label, get_size, normalize_filters
 
 DATA = "data.json"
 
-
-def load_json(file_path):
-    with open(file_path, 'r') as f:
-        data = json.load(f)
-    return data
 
 def sel_mode():
     print("=== Mini NPU Simulator ===\n")
@@ -72,14 +67,25 @@ def mode1():
         print(f"판정: {result}")
 
 def mode2():
+    print("#----------------------------------------")
+    print("# [1] 필터 로드")
+    print("#----------------------------------------")
     data = load_json(DATA)
+    if data is None:
+        print(f"{DATA}를 읽을 수 없어 프로그램을 종료합니다.")
+        return 
+    filters = normalize_filters(data)
+    if filters is None:
+        print("filters키를 찾을 수 없어 프로그램을 종료합니다.")
+        return
+    
 
 def main():
     mode = sel_mode()
     if mode == 1:
         mode1()
     elif mode == 2:
-        print("data.json 분석 모드는 아직 구현되지 않았습니다.")
+        mode2()
 
 
 if __name__ == "__main__":

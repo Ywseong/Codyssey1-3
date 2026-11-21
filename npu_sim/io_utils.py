@@ -3,8 +3,15 @@ import math
 from npu_sim.utils import split
 
 def load_json(file_path):
-    with open(file_path, 'r') as f:
-        data = json.load(f)
+    try:
+        with open(file_path, 'r', encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        print(f"{file_path} 파일을 찾을 수 없습니다.")
+        return None
+    except json.JSONDecodeError:
+        print(f"{file_path} 파일이 손상 되었습니다.")
+        return None
     return data
 
 def read_mat(n): ###########################

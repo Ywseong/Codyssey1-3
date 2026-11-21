@@ -20,6 +20,10 @@ def get_size(key):
         return None
 
 def normalize_filters(data):
+
+    if "filters" not in data:
+        return None
+    
     new_filters = {}
     for size_key, filter_group in data["filters"].items():
         new_size = get_size(size_key)
@@ -30,5 +34,13 @@ def normalize_filters(data):
                 if new_label is not None:
                     new_group[new_label] = matrix
             new_filters[new_size] = new_group
+            labels_text = ", ".join(new_group.keys())
+            
+            if "Cross" in new_group and "X" in new_group:
+                print(f"✓ {size_key} 필터 로드 완료 ({labels_text})")
+            else:
+                print(f"⚠ {size_key} 필터 일부 누락 ({labels_text})")
     return new_filters
+            
+   
             
