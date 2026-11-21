@@ -78,7 +78,71 @@ def mode2():
     if filters is None:
         print("filters키를 찾을 수 없어 프로그램을 종료합니다.")
         return
+
+    print("\n#----------------------------------------")
+    print("# [2] 패턴 분석 (라벨 정규화 적용)")
+    print("#----------------------------------------")
     
+    t_cnt = len(data["patterns"].keys())   # test count
+    p_cnt = 0   # pass count
+    f_cnt = 0   # fail count
+    case_dict = {}
+    for key in data["patterns"].keys():
+        pattern = data["patterns"][key]
+        size = get_size(key)
+        cross_filt = filters[size]["Cross"]
+        x_filt = filters[size]["X"]
+        cross_score = mac(pattern["input"], cross_filt)
+        x_score = mac(pattern["input"], x_filt)
+        result = judge(cross_score, x_score)   
+        if result == "A": 
+            result = "Cross"
+        elif result == "B":
+            result = "X"
+        expected = normalize_label(pattern["expected"])
+        if result == expected:
+            Pass_Fail = "PASS"
+            p_cnt += 1
+        else:
+            Pass_Fail = "FAIL"
+            f_cnt += 1
+            if result == "UNDECIDED":
+                case_dict[key] = "동점(UNDECIDED)"
+            else:
+                case_dict[key] = "판정 불일치"
+
+        print(f"\n--- {key} ---") 
+        print(f"Cross 점수: {cross_score}")
+        print(f"X 점수: {x_score}")
+        print(f"판정: {result} | expected: {expected} | {Pass_Fail}")
+
+    print("\n#----------------------------------------")
+    print("# [3] 성능 분석 (평균/10회)")
+    print("#----------------------------------------")
+    sizes = sorted([3] + list(filters.keys()))
+    print(f"{'크기':<8}{'평균 시간(ms)':>14}{'연산 횟수':>10}")
+    print("-------------------------------------")
+    for n in sizes:
+        nxn = [[1.0 for _ in range(n)] for _ in range(n)]
+        size = f"{n}x{n}"
+        cal_vol = n*n
+        _, avg_t = measure_mac(nxn,nxn)
+        print(f"{size:<8}{avg_t:>14.4f}{cal_vol:>10}")
+
+    print("\n#----------------------------------------")
+    print("# [4] 결과 요약")
+    print("#----------------------------------------")
+
+    print(f"총 테스트: {t_cnt}개")
+    print(f"통과: {p_cnt}개")
+    print(f"실패: {f_cnt}개")
+    print("실패 케이스:")
+    for key, value in case_dict.items():
+        print(f"  - {key}: {value}")
+    
+  
+  
+
 
 def main():
     mode = sel_mode()
