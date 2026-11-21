@@ -1,87 +1,11 @@
-import math
-import time
-EPSILON = 1e-9
 
-def mac(pattern, filt):
-    add = 0
-    for i in range(len(pattern)):
-        for j in range(len(pattern[0])):
-            mul = pattern[i][j]*filt[i][j]
-            add += mul
-    return add
+from npu_sim.npu import mac, judge, measure_mac, EPSILON
+from npu_sim.io_utils import read_mat, print_mat
+from npu_sim.data_loader import normalize_label
 
-def judge(score_a, score_b):
-    if abs(score_a-score_b) < EPSILON:
-        return "UNDECIDED"
-    elif score_a > score_b:
-        return "A"
-    else: 
-        return "B"
-def split(line):
-    result = []
-    src = ""
-    for i in line:
-        if i == " ":
-            if src != "":
-                result.append(src)
-                src = ""
-        else:
-            src += i
-    if src != "":
-        result.append(src)
-    return result
 
-def read_mat(n): ###########################
-    mat = []
-    re = " "
 
-    while len(mat) < n:
-        try:
-            mat = []
-            
-            print(f"{n} x {n} 행렬을{re}입력하시오") 
-            for _ in range(n):
-                line = input()
-                entry = split(line)
-                if len(entry) != n:
-                    print(f"\n{n}개의 요소를 입력하세요")
-                    re = " 다시 "
-                    break
-         
-                row = list(map(float,entry)) # value 에러 발생 가능
-                ok = True
-                for num  in row:    
-                    if not math.isfinite(num):
-                        print("\nnan과 inf는 허용되지 않습니다.")
-                        re = " 다시 "
-                        ok = False
-                        break
-                if ok:
-                    mat.append(row)
-                    
-                else:
-                    break
-        except ValueError:
-            print("\n실수를 입력하시오")
-            re = " 다시 "
-    return mat
 
-def print_mat(matrix):
-    for row in matrix:
-        for num in row:
-            print(num, end=" ")
-        print()
-
-def measure_mac(pattern, filt, repeat=10):
-    result = mac(pattern, filt)
-    whole_time = 0
-    for _ in range(repeat):
-        start = time.perf_counter()
-        mac(pattern, filt)
-        end = time.perf_counter()
-        elapsed_time = end - start
-        whole_time += elapsed_time
-    return result, ((whole_time)/repeat*1000) # ms 단위로 변환
 
 def sel_mode():
     print("=== Mini NPU Simulator ===\n")
@@ -149,6 +73,8 @@ def main():
         mode1()
     elif mode == 2:
         print("data.json 분석 모드는 아직 구현되지 않았습니다.")
+
+
 if __name__ == "__main__":
     main()
 
