@@ -1,11 +1,15 @@
 
 from npu_sim.npu import mac, judge, measure_mac, EPSILON
-from npu_sim.io_utils import read_mat, print_mat
-from npu_sim.data_loader import normalize_label
+from npu_sim.io_utils import read_mat, print_mat, load_json
+from npu_sim.data_loader import normalize_label, get_size
+
+DATA = "data.json"
 
 
-
-
+def load_json(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
 
 def sel_mode():
     print("=== Mini NPU Simulator ===\n")
@@ -66,6 +70,9 @@ def mode1():
         print(f"판정: 판정 불가 (|A-B| < {EPSILON})")
     else:
         print(f"판정: {result}")
+
+def mode2():
+    data = load_json(DATA)
 
 def main():
     mode = sel_mode()

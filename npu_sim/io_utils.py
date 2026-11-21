@@ -1,6 +1,12 @@
-
+import json
 import math
 from npu_sim.utils import split
+
+def load_json(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
 def read_mat(n): ###########################
     mat = []
     re = " "
